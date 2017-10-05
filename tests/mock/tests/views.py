@@ -54,7 +54,7 @@ class BasicViewTest(TestCase):
         # this is private by default
         r = c.get(reverse('knowledge_thread', args=[self.question.id, 'a-big-long-slug']))
         self.assertEquals(r.status_code, 404)
-    
+
         r = c.get(question_url)
         self.assertEquals(r.status_code, 404)
 
@@ -79,7 +79,7 @@ class BasicViewTest(TestCase):
 
         # lets make it public...
         self.question.public()
-    
+
         r = c.get(question_url)
         self.assertEquals(r.status_code, 200)
 

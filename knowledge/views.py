@@ -1,10 +1,10 @@
-import settings
 
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db.models import Q
 
+from knowledge import settings
 from knowledge.models import Question, Response, Category
 from knowledge.forms import QuestionForm, ResponseForm
 from knowledge.utils import paginate
@@ -32,20 +32,18 @@ def get_my_questions(request):
     if request.user.is_anonymous():
         return None
     else:
-        return Question.objects.can_view(request.user)\
-                               .filter(user=request.user)
+        return Question.objects.can_view(request.user).filter(user=request.user)
 
 
-def knowledge_index(request,
-                    template='django_knowledge/index.html'):
+def knowledge_index(request, template='django_knowledge/index.html'):
 
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
 
-    questions = Question.objects.can_view(request.user)\
-                                .prefetch_related('responses__question')[0:20]
+    questions = Question.objects.can_view(request.user).prefetch_related('responses__question')[0:20]
     # this is for get_responses()
-    [setattr(q, '_requesting_user', request.user) for q in questions]
+    for q in questions:
+        setattr(q, '_requesting_user', request.user)
 
     return render(request, template, {
         'request': request,
@@ -65,24 +63,20 @@ def knowledge_list(request,
         return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
 
     search = request.GET.get('title', None)
-    questions = Question.objects.can_view(request.user)\
-                                .prefetch_related('responses__question')
+    questions = Question.objects.can_view(request.user).prefetch_related('responses__question')
 
     if search:
-        questions = questions.filter(
-            Q(title__icontains=search) | Q(body__icontains=search)
-        )
+        questions = questions.filter(Q(title__icontains=search) | Q(body__icontains=search))
 
     category = None
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         questions = questions.filter(categories=category)
 
-    paginator, questions = paginate(questions,
-                                    50,
-                                    request.GET.get('page', '1'))
+    paginator, questions = paginate(questions, 50, request.GET.get('page', '1'))
     # this is for get_responses()
-    [setattr(q, '_requesting_user', request.user) for q in questions]
+    for q in questions:
+        setattr(q, '_requesting_user', request.user)
 
     return render(request, template, {
         'request': request,
@@ -104,13 +98,11 @@ def knowledge_thread(request,
 
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
-    
+
     try:
-        question = Question.objects.can_view(request.user)\
-                                   .get(id=question_id)
+        question = Question.objects.can_view(request.user).get(id=question_id)
     except Question.DoesNotExist:
-        if Question.objects.filter(id=question_id).exists() and \
-                                hasattr(settings, 'LOGIN_REDIRECT_URL'):
+        if Question.objects.filter(id=question_id).exists() and hasattr(settings, 'LOGIN_REDIRECT_URL'):
             return redirect(settings.LOGIN_REDIRECT_URL)
         else:
             raise Http404
@@ -146,7 +138,7 @@ def knowledge_moderate(
         lookup_id,
         model,
         mod,
-        allowed_mods=ALLOWED_MODS):
+        allowed_mods=None):
 
     """
     An easy to extend method to moderate questions
@@ -160,6 +152,7 @@ def knowledge_moderate(
         /knowledge/moderate/response/3/inherit/     -> 200
 
     """
+    allowed_mods = allowed_mods or ALLOWED_MODS
 
     if settings.LOGIN_REQUIRED and not request.user.is_authenticated():
         return HttpResponseRedirect(settings.LOGIN_URL+"?next=%s" % request.path)
@@ -180,9 +173,7 @@ def knowledge_moderate(
     if mod not in allowed_mods[model]:
         raise Http404
 
-    instance = get_object_or_404(
-        Model.objects.can_view(request.user),
-        id=lookup_id)
+    instance = get_object_or_404(Model.objects.can_view(request.user), id=lookup_id)
 
     func = getattr(instance, mod)
     if callable(func):

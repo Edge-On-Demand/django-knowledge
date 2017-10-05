@@ -136,7 +136,7 @@ class BasicModelTest(TestCase):
 
         ## someone comes along and privatizes this question ##
         question.private()
-        
+
         self.assertFalse(question.can_view(self.anon))
         self.assertFalse(question.can_view(self.bob))
 
@@ -197,7 +197,7 @@ class BasicModelTest(TestCase):
 
         self.assertTrue(response.can_view(self.admin))
 
-    
+
     def test_get_responses(self):
         """
         Ensures adding another response isn't crossed into other responses.
@@ -223,7 +223,7 @@ class BasicModelTest(TestCase):
 
         self.assertEqual(len(mail.outbox), 0)
 
-    
+
     def test_get_public_responses(self):
         """
         Bug mentioned in issue #25.
@@ -248,7 +248,7 @@ class BasicModelTest(TestCase):
 
         self.assertEqual(len(mail.outbox), 0)
 
-    
+
     def test_urls(self):
         question_url = reverse('knowledge_thread', args=[self.question.id, slugify(self.question.title)])
 

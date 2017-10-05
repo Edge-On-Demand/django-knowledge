@@ -97,7 +97,7 @@ class BasicFormTest(TestCase):
         self.assertEquals(response.email, None)
         self.assertEquals(response.body, 'This is the response body friend!')
         self.assertEquals(response.user, self.joe)
-    
+
     def test_form_question_status(self):
         # test the default for anonymous in tests/settings.py...
         form = QuestionForm(self.joe)

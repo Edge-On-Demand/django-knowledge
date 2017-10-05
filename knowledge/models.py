@@ -1,10 +1,10 @@
-from knowledge import settings
 
 import django
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings as django_settings
 
+from knowledge import settings
 from knowledge.managers import QuestionManager, ResponseManager
 from knowledge.signals import knowledge_post_save
 
@@ -45,12 +45,10 @@ class KnowledgeBase(models.Model):
     added = models.DateTimeField(auto_now_add=True)
     lastchanged = models.DateTimeField(auto_now=True)
 
-    user = models.ForeignKey('auth.User' if django.VERSION < (1, 5, 0) else django_settings.AUTH_USER_MODEL, blank=True,
-                             null=True, db_index=True)
+    user = models.ForeignKey('auth.User' if django.VERSION < (1, 5, 0) else django_settings.AUTH_USER_MODEL, blank=True, null=True, db_index=True)
     alert = models.BooleanField(default=settings.ALERTS,
         verbose_name=_('Alert'),
-        help_text=_('Check this if you want to be alerted when a new'
-                        ' response is added.'))
+        help_text=_('Check this if you want to be alerted when a new response is added.'))
 
     # for anonymous posting, if permitted
     name = models.CharField(max_length=64, blank=True, null=True,
@@ -64,8 +62,7 @@ class KnowledgeBase(models.Model):
         abstract = True
 
     def save(self, *args, **kwargs):
-        if not self.user and self.name and self.email \
-                and not self.id:
+        if not self.user and self.name and self.email and not self.id:
             # first time because no id
             self.public(save=False)
 
@@ -83,10 +80,7 @@ class KnowledgeBase(models.Model):
         Get local name, then self.user's first/last, and finally
         their username if all else fails.
         """
-        name = (self.name or (self.user and (
-            u'{0} {1}'.format(self.user.first_name, self.user.last_name).strip()\
-            or self.user.username
-        )))
+        name = (self.name or (self.user and (u'{0} {1}'.format(self.user.first_name, self.user.last_name).strip() or self.user.username)))
         return name.strip() or _("Anonymous")
 
     get_email = lambda s: s.email or (s.user and s.user.email)

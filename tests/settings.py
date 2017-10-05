@@ -7,7 +7,7 @@ DEBUG = True
 DATABASE_ENGINE = 'sqlite3'
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', 
+        'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(DIRNAME, 'example.sqlite').replace('\\','/'),
         'USER': '',
         'PASSWORD': '',

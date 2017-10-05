@@ -8,7 +8,7 @@ from knowledge.templatetags.knowledge_tags import get_gravatar, page_query
 class BasicTemplateTagTest(TestCase):
     def test_gravatar(self):
         self.assertEquals(
-            'https://secure.gravatar.com/avatar/883955996dbb79f38d8814dbfb336885.jpg?s=60&amp;r=g&amp;d=retro', 
+            'https://secure.gravatar.com/avatar/883955996dbb79f38d8814dbfb336885.jpg?s=60&amp;r=g&amp;d=retro',
             get_gravatar('bryan@bryanhelmig.com', 60, 'g', 'retro')
         )
 

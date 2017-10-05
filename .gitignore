@@ -8,3 +8,6 @@ docs/_build
 .sass-cache
 
 tests/reports
+
+*.out
+*.geany

@@ -85,7 +85,7 @@ class BasicSignalTest(TestCase):
         One question by joe, one response by admin: bob responds.
         """
         self.assertTrue(settings.ALERTS)
-        
+
         self.assertEqual(len(mail.outbox), 0)
 
         RESPONSE_POST = {
