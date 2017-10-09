@@ -31,6 +31,7 @@ class Category(models.Model):
         return self.title
 
     class Meta:
+        app_label = 'knowledge'
         ordering = ['title']
         verbose_name = _('Category')
         verbose_name_plural = _('Categories')
@@ -59,6 +60,7 @@ class KnowledgeBase(models.Model):
         help_text=_('Enter a valid email address.'))
 
     class Meta:
+        app_label = 'knowledge'
         abstract = True
 
     def save(self, *args, **kwargs):
@@ -160,6 +162,7 @@ class Question(KnowledgeBase):
     objects = QuestionManager()
 
     class Meta:
+        app_label = 'knowledge'
         ordering = ['-added']
         verbose_name = _('Question')
         verbose_name_plural = _('Questions')
@@ -260,6 +263,7 @@ class Response(KnowledgeBase):
     objects = ResponseManager()
 
     class Meta:
+        app_label = 'knowledge'
         ordering = ['added']
         verbose_name = _('Response')
         verbose_name_plural = _('Responses')
