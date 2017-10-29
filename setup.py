@@ -5,7 +5,7 @@ version_tuple = __import__('knowledge').VERSION
 version = '.'.join([str(v) for v in version_tuple])
 
 setup(
-    name='django-knowledge',
+    name='django-knowledge-mega',
     description='''A simple frontend and admin interface for dealing with help
         knowledge tickets and issues, including public and private responses and searching.''',
     version=version,
