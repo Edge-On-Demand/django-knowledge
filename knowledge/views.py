@@ -1,3 +1,4 @@
+import collections
 
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -176,7 +177,7 @@ def knowledge_moderate(
     instance = get_object_or_404(Model.objects.can_view(request.user), id=lookup_id)
 
     func = getattr(instance, mod)
-    if callable(func):
+    if isinstance(func, collections.Callable):
         func()
 
     try:
@@ -211,5 +212,5 @@ def knowledge_ask(request,
         'my_questions': get_my_questions(request),
         'form': form,
         'categories': Category.objects.all(),
-        'BASE_TEMPLATE' : settings.BASE_TEMPLATE,
+        'BASE_TEMPLATE' : settings.BASE_TEMPLATE
     })

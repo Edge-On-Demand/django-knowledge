@@ -19,10 +19,6 @@ class QuestionManager(models.Manager):
 
 
 class ResponseManager(models.Manager):
-    # def all(self, *args, **kwargs):
-    #     return super(ResponseManager, self).all(*args, **kwargs)\
-    #                                        .select_related('question', 'user')
-
     def can_view(self, user):
         qs = super(ResponseManager, self).get_queryset().select_related('question', 'user')
 
